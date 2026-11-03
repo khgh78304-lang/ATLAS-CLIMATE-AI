@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#030914">
+<title>ATLAS CLIMATE 3D</title>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;background:#030914;color:#eefaff;
+font-family:'IBM Plex Sans Arabic',Arial,sans-serif;
+}
+.shell{max-width:1250px;margin:auto;padding:12px}
+.panel,.top{
+background:#0a1b2c;border:1px solid #24475c;
+border-radius:18px;box-shadow:0 12px 40px #0006
+}
+.top{
+padding:13px 17px;display:flex;
+align-items:center;justify-content:space-between;gap:10px
+}
+.brand{font-size:21px;font-weight:700;color:#baf7ff}
+.brand span{color:#65e7f4}
+.sub{font-size:11px;color:#91a9b9}
+button,input{font:inherit}
+button{
+background:#123348;color:white;border:1px solid #285065;
+border-radius:11px;padding:10px 14px;cursor:pointer
+}
+.searchbar{display:flex;gap:8px;margin:13px 0}
+.searchbar input{
+flex:1;min-width:0;background:#0b2030;
+border:1px solid #285065;color:white;
+border-radius:12px;padding:12px
+}
+.main{
+display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr);
+gap:13px
+}
+.globe-panel{overflow:hidden;position:relative}
+.globe-head{
+padding:13px;display:flex;justify-content:space-between;
+align-items:center;gap:8px;flex-wrap:wrap
+}
+.globe-head b{color:#65e7f4}
+.globe-tools{display:flex;gap:7px}
+.globe-tools button{font-size:11px;padding:7px 10px}
+#globe{
+height:500px;width:100%;
+background:radial-gradient(circle,#102e47,#030914 70%);
+cursor:grab;touch-action:pan-y
+}
+#globe:active{cursor:grabbing}
+.hint{text-align:center;color:#91a9b9;font-size:11px;padding:9px}
+.info{padding:17px;display:flex;flex-direction:column;gap:13px}
+.panel-head{display:flex;justify-content:space-between}
+.panel-head h2{margin:0;color:#65e7f4;font-size:17px}
+.live{font-size:10px;color:#8df0c0}
+.place{font-size:13px;color:#91a9b9}
+.temperature{font-size:48px;font-weight:700}
+.condition{font-size:14px;color:#c3dce7}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric{
+background:#102b3d;border:1px solid #285065;
+border-radius:13px;padding:11px
+}
+.metric small{display:block;color:#91a9b9;font-size:11px}
+.metric b{display:block;margin-top:5px;font-size:17px}
+.section-title{font-size:14px;color:#65e7f4}
+.risk-list{display:grid;gap:7px}
+.risk{font-size:12px;background:#172b38;border-radius:10px;padding:10px}
+.forecast-panel{margin-top:13px;padding:15px}
+.forecast-head{display:flex;justify-content:space-between;gap:8px}
+.forecast{display:flex;gap:9px;overflow:auto;padding:12px 0}
+.day{
+min-width:95px;text-align:center;background:#10283a;
+border:1px solid #27465a;border-radius:14px;padding:12px 8px
+}
+.day .ico{font-size:24px;margin:8px}
+.day small{color:#91a9b9}
+.day b{display:block;font-size:13px}
+.status{font-size:12px;color:#91a9b9;padding:8px}
+footer{text-align:center;color:#718b9d;font-size:10px;margin:17px 0}
+@media(max-width:780px){
+.shell{padding:8px}
+.main{grid-template-columns:1fr}
+#globe{height:390px}
+.brand{font-size:18px}
+.temperature{font-size:42px}
+}
+</style>
+</head>
+
+<body>
+<div class="shell">
+
+<header class="top">
+<div>
+<div class="brand">✦ ATLAS <span>CLIMATE 3D</span></div>
+<div class="sub">استكشف كوكب الأرض والطقس حول العالم</div>
+</div>
+<button id="locBtn">⌖ موقعي</button>
+</header>
+
+<div class="searchbar">
+<input id="cityQuery" placeholder="ابحث عن دولة أو مدينة أو قرية...">
+<button id="searchBtn">بحث</button>
+</div>
+
+<div class="status" id="status">جاري تشغيل الكرة الأرضية...</div>
+
+<div class="main">
+
+<section class="panel globe-panel">
+<div class="globe-head">
+<b>🌍 الكرة الأرضية ثلاثية الأبعاد</b>
+<div class="globe-tools">
+<button id="naturalBtn">🌎 طبيعية</button>
+<button id="nightBtn">🌃 ليلية</button>
+</div>
+</div>
+
+<div id="globe"></div>
+<div class="hint">اسحب الكرة لتدويرها • استخدم إصبعين أو عجلة الفأرة للتقريب</div>
+</section>
+
+<aside class="panel info">
+<div class="panel-head">
+<h2>معلومات الطقس</h2>
+<span class="live">● Open-Meteo</span>
+</div>
+
+<div>
+<div class="place" id="place">بيوكرى، المغرب</div>
+<div class="temperature" id="temp">--°</div>
+<div class="condition" id="condition">جاري تحميل الطقس...</div>
+</div>
+
+<div class="metrics">
+<div class="metric"><small>💧 الرطوبة</small><b id="humidity">--%</b></div>
+<div class="metric"><small>🌬️ الرياح</small><b id="wind">-- km/h</b></div>
+<div class="metric"><small>🌧️ احتمال المطر</small><b id="rain">--%</b></div>
+<div class="metric"><small>🌡️ الضغط</small><b id="pressure">-- hPa</b></div>
+</div>
+
+<div class="section-title">مؤشرات وملاحظات جوية</div>
+<div class="risk-list" id="risks">
+<div class="risk">اختر منطقة من الكرة الأرضية.</div>
+</div>
+<div class="sub" id="updated">المصدر: Open-Meteo</div>
+</aside>
+</div>
+
+<section class="panel forecast-panel">
+<div class="forecast-head">
+<h3>📅 توقعات الأيام السبعة</h3>
+<span class="sub">التوقيت المحلي</span>
+</div>
+<div class="forecast" id="forecast">جاري التحميل...</div>
+</section>
+
+<footer>
+ATLAS CLIMATE 3D • بيانات الطقس Open-Meteo
+</footer>
+</div>
+
+<script src="https://unpkg.com/globe.gl"></script>
+
+<script>
+const $=id=>document.getElementById(id);
+
+let selected={
+lat:30.03,
+lon:-9.15,
+name:'بيوكرى، المغرب'
+};
+
+let selectionId=0;
+let globe=null;
+let night=false;
+
+function initGlobe(){
+
+if(typeof Globe==='undefined'){
+$('status').textContent='تعذر تحميل مكتبة الكرة الأرضية. تحقق من الإنترنت.';
+return;
+}
+
+globe=Globe()(document.getElementById('globe'))
+.globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+.bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+.backgroundColor('#030914')
+.showAtmosphere(true)
+.atmosphereColor('#4bbaff')
+.atmosphereAltitude(0.18)
+.width(document.getElementById('globe').clientWidth)
+.height(document.getElementById('globe').clientHeight)
+.pointAltitude(0.025)
+.pointRadius(0.35)
+.pointColor('color')
+.pointsData([])
+.onGlobeClick(({lat,lng})=>{
+selectPlace(lat,lng,'جاري تحديد المنطقة...',false);
+});
+
+const controls=globe.controls();
+controls.autoRotate=true;
+controls.autoRotateSpeed=0.35;
+controls.enableDamping=true;
+controls.minDistance=105;
+controls.maxDistance=500;
+
+globe.pointOfView({
+lat:30.03,
+lng:-9.15,
+altitude:2.5
+},0);
+
+window.addEventListener('resize',()=>{
+if(globe){
+globe.width(document.getElementById('globe').clientWidth);
+}
+});
+
+}
+
+function setMarker(lat,lon){
+if(!globe)return;
+
+globe.pointsData([{
+lat,
+lng:lon,
+color:'#65e7f4'
+}]);
+}
+
+$('naturalBtn').onclick=()=>{
+night=false;
+if(globe){
+globe.globeImageUrl(
+'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg'
+);
+}
+};
+
+$('nightBtn').onclick=()=>{
+night=true;
+if(globe){
+globe.globeImageUrl(
+'https://unpkg.com/three-globe/example/img/earth-night.jpg'
+);
+}
+};
+
+function icon(code,day=1){
+if(code===0)return day?'☀️':'🌙';
+if(code<=2)return '🌤️';
+if(code===3)return '☁️';
+if(code<=48)return '🌫️';
+if(code<=67)return '🌧️';
+if(code<=77)return '❄️';
+if(code<=82)return '🌦️';
+if(code<=86)return '🌨️';
+if(code>=95)return '⛈️';
+return '🌡️';
+}
+
+function description(code){
+if(code===0)return 'سماء صافية';
+if(code<=2)return 'غيوم قليلة';
+if(code===3)return 'غائم';
+if(code<=48)return 'ضباب';
+if(code<=57)return 'رذاذ';
+if(code<=67)return 'أمطار';
+if(code<=77)return 'ثلوج';
+if(code<=82)return 'زخات مطرية';
+if(code<=86)return 'زخات ثلجية';
+if(code>=95)return 'عواصف رعدية';
+return 'طقس متغير';
+}
+
+async function reverseCity(lat,lon){
+try{
+const r=await fetch(
+'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+
+lat+'&lon='+lon+'&accept-language=ar'
+);
+if(!r.ok)throw Error();
+const d=await r.json();
+const a=d.address||{};
+return [
+a.city||a.town||a.village||a.county,
+a.state,
+a.country
+].filter(Boolean).join('، ')||'الموقع المحدد';
+}catch(e){
+return 'الموقع المحدد';
+}
+}
+
+async function selectPlace(lat,lon,name,move=true){
+
+selectionId++;
+const id=selectionId;
+
+selected={lat:Number(lat),lon:Number(lon),name};
+
+if(globe){
+if(move){
+globe.pointOfView({
+lat:selected.lat,
+lng:selected.lon,
+altitude:2.5
+},1200);
+}
+setMarker(selected.lat,selected.lon);
+}
+
+$('place').textContent=name;
+$('status').textContent='جاري تحميل الطقس...';
+
+if(name==='جاري تحديد المنطقة...'){
+name=await reverseCity(lat,lon);
+if(id!==selectionId)return;
+selected.name=name;
+$('place').textContent=name;
+}
+
+await loadWeather(id);
+}
+
+async function loadWeather(id){
+try{
+
+$('temp').textContent='...';
+
+const url=
+'https://api.open-meteo.com/v1/forecast?latitude='+
+selected.lat+
+'&longitude='+selected.lon+
+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,is_day'+
+'&hourly=precipitation_probability'+
+'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code'+
+'&forecast_days=7&timezone=auto';
+
+const r=await fetch(url);
+if(!r.ok)throw Error();
+
+const d=await r.json();
+if(id!==selectionId)return;
+
+const c=d.current;
+
+$('temp').textContent=Math.round(c.temperature_2m)+'°C';
+$('condition').textContent=
+icon(c.weather_code,c.is_day)+' '+
+description(c.weather_code)+
+' • الإحساس '+Math.round(c.apparent_temperature)+'°';
+
+$('humidity').textContent=c.relative_humidity_2m+'%';
+$('wind').textContent=Math.round(c.wind_speed_10m)+' km/h';
+$('pressure').textContent=Math.round(c.surface_pressure)+' hPa';
+
+const idx=Math.max(0,d.hourly.time.findIndex(t=>t>=c.time));
+$('rain').textContent=(d.hourly.precipitation_probability[idx]??0)+'%';
+
+$('forecast').innerHTML='';
+
+for(let i=0;i<7;i++){
+const el=document.createElement('div');
+el.className='day';
+const day=new Date(d.daily.time[i]+'T12:00:00')
+.toLocaleDateString('ar',{weekday:'short'});
+
+el.innerHTML=`
+<small>${day}</small>
+<div class="ico">${icon(d.daily.weather_code[i])}</div>
+<b>${Math.round(d.daily.temperature_2m_max[i])}° / ${Math.round(d.daily.temperature_2m_min[i])}°</b>
+<small>مطر ${d.daily.precipitation_probability_max[i]??0}%</small>
+`;
+$('forecast').appendChild(el);
+}
+
+const risks=[];
+if(c.temperature_2m>=35)risks.push('🌡️ حرارة مرتفعة.');
+if(c.temperature_2m<=3)risks.push('❄️ برودة شديدة نسبياً.');
+if((d.daily.precipitation_probability_max[0]||0)>=60)
+risks.push('🌧️ احتمال أمطار مرتفع.');
+if(c.wind_speed_10m>=40)risks.push('💨 رياح قوية نسبياً.');
+if(c.weather_code>=95)risks.push('⛈️ مؤشرات عواصف رعدية.');
+if(!risks.length)risks.push('✓ لا تظهر مؤشرات مختصرة مرتفعة حالياً.');
+
+$('risks').innerHTML=risks.map(x=>
+'<div class="risk">'+x+'</div>').join('');
+
+$('updated').textContent=
+'آخر تحديث: '+new Date().toLocaleTimeString('ar')+
+' • Open-Meteo';
+
+$('status').textContent='تم تحديث الطقس بنجاح.';
+
+}catch(e){
+if(id!==selectionId)return;
+$('condition').textContent='تعذر جلب الطقس. تحقق من الإنترنت.';
+$('status').textContent='فشل تحميل البيانات.';
+}
+}
+
+async function searchCity(){
+const q=$('cityQuery').value.trim();
+if(!q)return;
+
+$('searchBtn').disabled=true;
+$('status').textContent='جاري البحث...';
+
+try{
+
+const url=
+'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=10&accept-language=ar&q='+
+encodeURIComponent(q);
+
+const r=await fetch(url);
+if(!r.ok)throw Error();
+
+const results=await r.json();
+if(!results.length)throw Error();
+
+const exact=results.find(p=>
+(p.name||'').toLowerCase()===q.toLowerCase()
+);
+
+const p=exact||results.find(x=>
+x.type==='country'||x.addresstype==='country'
+)||results[0];
+
+const a=p.address||{};
+const name=[
+p.name,a.state,a.country
+].filter(Boolean).filter((v,i,x)=>x.indexOf(v)===i).join('، ');
+
+const isCountry=p.type==='country'||p.addresstype==='country';
+
+await selectPlace(
+p.lat,p.lon,name||p.display_name,true
+);
+
+if(globe&&isCountry){
+globe.pointOfView({lat:+p.lat,lng:+p.lon,altitude:2.1},1500);
+}
+
+}catch(e){
+$('status').textContent='لم يتم العثور على المنطقة.';
+}finally{
+$('searchBtn').disabled=false;
+}
+}
+
+$('searchBtn').onclick=searchCity;
+
+$('cityQuery').addEventListener('keydown',e=>{
+if(e.key==='Enter')searchCity();
+});
+
+$('locBtn').onclick=()=>{
+if(!navigator.geolocation){
+$('status').textContent='الموقع غير مدعوم.';
+return;
+}
+
+$('status').textContent='جاري تحديد موقعك...';
+
+navigator.geolocation.getCurrentPosition(async p=>{
+const lat=p.coords.latitude;
+const lon=p.coords.longitude;
+const name=await reverseCity(lat,lon);
+await selectPlace(lat,lon,name,true);
+},()=>{
+$('status').textContent='تعذر تحديد الموقع. تحقق من الأذونات.';
+},{enableHighAccuracy:true,timeout:15000});
+};
+
+initGlobe();
+selectPlace(30.03,-9.15,'بيوكرى، المغرب',true);
+
+</script>
+</body>
+</html>

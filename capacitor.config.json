@@ -1,0 +1,6 @@
+{
+  "appId": "com.atlas.climateai",
+  "appName": "ATLAS CLIMATE AI",
+  "webDir": "www",
+  "server": { "androidScheme": "https" }
+}

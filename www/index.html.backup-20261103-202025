@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#06111d">
+<title>ATLAS CLIMATE AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#06111d;--panel:rgba(10,28,43,.86);--line:rgba(122,210,231,.2);--cyan:#65e7f4;--muted:#91a9b9;--text:#eefaff;--gold:#f6c879}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 30%,#103044 0,#071724 44%,#040b13 100%);color:var(--text);font-family:'IBM Plex Sans Arabic',Arial,sans-serif;min-height:100vh}.shell{max-width:1180px;margin:auto;padding:14px 16px 26px}.top{height:62px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:18px;padding:0 16px;background:#081824d9;backdrop-filter:blur(18px)}.brand{font-size:20px;font-weight:700;letter-spacing:.2px;color:#baf7ff}.brand span{color:var(--cyan)}.sub{font-size:11px;color:var(--muted)}.top-actions{display:flex;gap:8px}button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);color:var(--text);background:#123348;border-radius:12px;padding:10px 14px}button:active{transform:scale(.98)}.searchbar{display:flex;gap:8px;margin:14px 0}.searchbar input,.chat-input{min-width:0;flex:1;border:1px solid var(--line);background:#0b2030;color:white;border-radius:13px;padding:12px 14px;outline:none}.searchbar input:focus,.chat-input:focus{border-color:var(--cyan)}.main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(290px,.85fr);gap:14px;align-items:stretch}.globe-panel,.info-panel,.forecast-panel,.chat-panel{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(16px);border-radius:22px;box-shadow:0 18px 60px #0005}.globe-panel{position:relative;min-height:470px;overflow:hidden;background:radial-gradient(circle at 50% 48%,#12364a 0,#071824 58%,#06111d 100%)}#globe{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y}.globe-hint{position:absolute;bottom:16px;left:0;right:0;text-align:center;color:#83b7c7;font-size:12px;pointer-events:none}.globe-title{position:absolute;top:16px;right:18px;color:var(--cyan);font-weight:600;pointer-events:none}.info-panel{padding:19px;display:flex;flex-direction:column;gap:15px}.panel-head{display:flex;align-items:center;justify-content:space-between}.panel-head h2{font-size:18px;margin:0;color:var(--cyan)}.live{font-size:11px;color:#8df0c0}.place{font-size:13px;color:var(--muted)}.temperature{font-size:49px;font-weight:700;line-height:1.2}.condition{color:#b9d1df}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{background:#102b3d;border:1px solid #285065;border-radius:14px;padding:12px}.metric small{display:block;color:var(--muted);font-size:11px}.metric b{display:block;margin-top:5px;font-size:18px}.section-title{font-size:14px;color:var(--cyan);margin:2px 0 0}.risk-list{display:grid;gap:8px}.risk{font-size:12px;color:#d8e6ed;background:#172b38;border-radius:10px;padding:10px}.forecast-panel{margin-top:14px;padding:15px}.forecast-head{display:flex;justify-content:space-between;align-items:center}.forecast-head h3{margin:0;font-size:15px}.forecast{display:flex;gap:9px;overflow:auto;padding:12px 0 3px;scrollbar-width:thin}.day{min-width:92px;text-align:center;background:#10283a;border:1px solid #27465a;border-radius:14px;padding:12px 8px}.day .ico{font-size:25px;margin:8px}.day small{color:var(--muted)}.day b{display:block;font-size:13px}.chat-panel{margin-top:14px;padding:15px}.chips{display:flex;gap:8px;overflow:auto;margin-bottom:12px}.chips button{white-space:nowrap;font-size:12px;background:#102b3c}.chat-log{max-height:240px;overflow:auto;display:grid;gap:9px;margin-bottom:12px}.bubble{padding:11px 13px;border-radius:14px;max-width:92%;font-size:13px;line-height:1.7;white-space:pre-wrap}.bot{background:#102e40;border:1px solid #285267;justify-self:start}.user{background:#15536a;justify-self:end}.chat-row{display:flex;gap:8px}.send{background:#4bd9e9;color:#03202b;font-weight:700;border:0;min-width:54px}.status{color:var(--muted);font-size:11px;margin-top:8px;min-height:18px}footer{text-align:center;color:#6f899b;font-size:10px;margin:18px 0 4px}.hidden{display:none}@media(max-width:760px){.shell{padding:9px}.main{grid-template-columns:1fr}.globe-panel{min-height:390px;order:0}.info-panel{order:1}.temperature{font-size:42px}.top{height:56px}.brand{font-size:17px}}@media(min-width:761px){.info-panel{min-height:470px}}
+</style>
+</head>
+<body><div class="shell">
+<header class="top"><div><div class="brand">✦ ATLAS <span>CLIMATE AI</span></div><div class="sub">استكشف الطقس والمناخ حول العالم</div></div><div class="top-actions"><button id="locBtn">⌖ موقعي</button></div></header>
+<div class="searchbar"><input id="cityQuery" placeholder="ابحث عن مدينة أو دولة..." autocomplete="off"><button id="searchBtn">بحث</button></div>
+<div class="main">
+<section class="globe-panel"><div class="globe-title">🌐 الكرة الأرضية التفاعلية</div><canvas id="globe"></canvas><div class="globe-hint">اسحب لتدوير الكرة • اضغط على أي منطقة لاستكشافها</div></section>
+<aside class="info-panel"><div class="panel-head"><h2>معلومات المنطقة</h2><span class="live">● مباشر عند توفر البيانات</span></div><div><div class="place" id="place">بيوكرى، المغرب</div><div class="temperature" id="temp">--°</div><div class="condition" id="condition">جاري تحميل الطقس...</div></div><div class="metrics"><div class="metric"><small>💧 الرطوبة</small><b id="humidity">--%</b></div><div class="metric"><small>🌬️ الرياح</small><b id="wind">-- km/h</b></div><div class="metric"><small>🌧️ احتمال المطر</small><b id="rain">--%</b></div><div class="metric"><small>🌡️ الضغط</small><b id="pressure">-- hPa</b></div></div><div class="section-title">مؤشرات وملاحظات جوية</div><div class="risk-list" id="risks"><div class="risk">يتم تحليل ظروف الطقس عند اختيار المنطقة.</div></div><div class="sub" id="updated">المصدر: Open-Meteo</div></aside>
+</div>
+<section class="forecast-panel"><div class="forecast-head"><h3>📅 توقعات الأيام السبعة</h3><span class="sub">حسب التوقيت المحلي للمنطقة</span></div><div class="forecast" id="forecast"><div class="sub">جاري التحميل...</div></div></section>
+<section class="chat-panel"><div class="forecast-head"><h3>✦ اسأل ATLAS AI</h3><span class="sub">الثقافة العامة • الطقس • المناخ</span></div><div class="chips"><button data-q="اشرح لي مناخ هذه المنطقة">🌍 ما طبيعة المناخ هنا؟</button><button data-q="ما الفرق بين الطقس والمناخ؟">☁️ الفرق بين الطقس والمناخ؟</button><button data-q="فسر لي حالة الطقس الحالية">🌦️ فسر حالة الطقس</button><button data-q="ما أسباب تشكل العواصف؟">⛈️ كيف تتشكل العواصف؟</button></div><div class="chat-log" id="chatLog"><div class="bubble bot">مرحبا! أنا ATLAS CLIMATE AI. اختار منطقة من الكرة الأرضية أو ابحث عن مدينة، ثم اسألني عن الطقس أو المناخ أو الثقافة العامة.</div></div><div class="chat-row"><input class="chat-input" id="chatInput" placeholder="اسأل عن الطقس أو المناخ أو أي موضوع معرفي..."><button class="send" id="sendBtn">➤</button></div><div class="status" id="chatStatus">المساعد يحتاج إعداد مفتاح API في الخادم لتفعيل الإجابات الذكية.</div></section>
+<footer>بيانات الطقس: Open-Meteo • المعلومات الجوية ليست بديلاً عن تنبيهات السلطات الرسمية</footer>
+</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const $=id=>document.getElementById(id);let selected={lat:30.03,lon:-9.15,name:'بيوكرى، المغرب'};let chatHistory=[];let weatherData=null;let selectionId=0;
+const canvas=$('globe'),scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(0,0,3.15);
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+const group=new THREE.Group();scene.add(group);
+const geometry=new THREE.SphereGeometry(1,64,48);
+const loader=new THREE.TextureLoader();
+const earth=new THREE.Mesh(geometry,new THREE.MeshPhongMaterial({color:0x9ccbd5,shininess:18,specular:0x336677}));group.add(earth);
+loader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg',t=>{t.colorSpace=THREE.SRGBColorSpace;earth.material.map=t;earth.material.color.set(0xffffff);earth.material.needsUpdate=true;},undefined,()=>{});
+const cloud=new THREE.Mesh(new THREE.SphereGeometry(1.008,48,36),new THREE.MeshBasicMaterial({color:0x65dff0,transparent:true,opacity:.055,side:THREE.BackSide}));group.add(cloud);
+scene.add(new THREE.AmbientLight(0x9ac8e5,1.6));const sun=new THREE.DirectionalLight(0xffffff,2.2);sun.position.set(4,2,5);scene.add(sun);
+const marker=new THREE.Mesh(new THREE.SphereGeometry(.018,16,12),new THREE.MeshBasicMaterial({color:0x6af4ff}));group.add(marker);
+function llv(lat,lon,r=1.025){const a=THREE.MathUtils.degToRad(lat),b=THREE.MathUtils.degToRad(lon);return new THREE.Vector3(-r*Math.cos(a)*Math.sin(b),r*Math.sin(a),r*Math.cos(a)*Math.cos(b));}
+function pointMarker(){marker.position.copy(llv(selected.lat,selected.lon));}
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}new ResizeObserver(resize).observe(canvas);resize();
+let down=false,px=0,py=0,dragged=false;canvas.addEventListener('pointerdown',e=>{down=true;px=e.clientX;py=e.clientY;dragged=false;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-px,dy=e.clientY-py;if(Math.abs(dx)+Math.abs(dy)>2)dragged=true;group.rotation.y+=dx*.006;group.rotation.x=Math.max(-1.1,Math.min(1.1,group.rotation.x+dy*.004));px=e.clientX;py=e.clientY});canvas.addEventListener('pointerup',e=>{down=false;if(!dragged){const rect=canvas.getBoundingClientRect(),mouse=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1),ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);const hit=ray.intersectObject(earth);if(hit.length){const p=group.worldToLocal(hit[0].point.clone()).normalize();const lat=THREE.MathUtils.radToDeg(Math.asin(p.y));const lon=THREE.MathUtils.radToDeg(Math.atan2(-p.x,p.z));selectPlace(lat,lon,'جاري تحديد المدينة والدولة...');}}});
+function animate(){requestAnimationFrame(animate);if(!down)group.rotation.y+=.00055;renderer.render(scene,camera)}animate();pointMarker();
+function icon(code,day=1){if(code===0)return day?'☀️':'🌙';if(code<=2)return day?'🌤️':'☁️';if(code===3)return'☁️';if(code<=48)return'🌫️';if(code<=57)return'🌦️';if(code<=67)return'🌧️';if(code<=77)return'❄️';if(code<=82)return'🌧️';if(code<=86)return'🌨️';if(code>=95)return'⛈️';return'🌤️'}
+function describe(code){if(code===0)return'سماء صافية';if(code<=2)return'غائم جزئياً';if(code===3)return'غائم';if(code<=48)return'ضباب';if(code<=57)return'رذاذ';if(code<=67)return'أمطار';if(code<=77)return'ثلوج';if(code<=82)return'زخات مطر';if(code<=86)return'تساقط الثلوج';if(code>=95)return'عواصف رعدية';return'حالة جوية متغيرة'}
+async function loadWeather(requestId=selectionId){ $('place').textContent=selected.name;$('temp').textContent='…';$('condition').textContent='جاري جلب البيانات...';try{const u=`https://api.open-meteo.com/v1/forecast?latitude=${selected.lat}&longitude=${selected.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,is_day,precipitation&hourly=temperature_2m,precipitation_probability,weather_code,is_day&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,sunrise,sunset&forecast_days=7&timezone=auto`;const r=await fetch(u);if(!r.ok)throw Error();const d=await r.json();if(requestId!==selectionId)return;const c=d.current;weatherData=d;$('temp').textContent=Math.round(c.temperature_2m)+'°C';$('condition').textContent=icon(c.weather_code,c.is_day)+' '+describe(c.weather_code)+' • الإحساس '+Math.round(c.apparent_temperature)+'°';$('humidity').textContent=c.relative_humidity_2m+'%';$('wind').textContent=Math.round(c.wind_speed_10m)+' km/h';$('pressure').textContent=Math.round(c.surface_pressure)+' hPa';const idx=Math.max(0,d.hourly.time.findIndex(t=>t>=c.time));$('rain').textContent=(d.hourly.precipitation_probability[idx]??0)+'%';$('forecast').innerHTML='';for(let i=0;i<7;i++){const el=document.createElement('div');el.className='day';const dt=new Date(d.daily.time[i]+'T12:00:00');const day=dt.toLocaleDateString('ar',{weekday:'short'});el.innerHTML=`<small>${day}</small><div class="ico">${icon(d.daily.weather_code[i],1)}</div><b>${Math.round(d.daily.temperature_2m_max[i])}° / ${Math.round(d.daily.temperature_2m_min[i])}°</b><small>مطر ${d.daily.precipitation_probability_max[i]??0}%</small>`;$('forecast').appendChild(el)}const risks=[];if(c.temperature_2m>=35)risks.push('🌡️ حرارة مرتفعة حالياً؛ تحقق من التنبيهات المحلية.');if((d.daily.precipitation_probability_max[0]||0)>=60)risks.push('🌧️ احتمال أمطار مرتفع اليوم حسب التوقعات.');if(c.wind_speed_10m>=40)risks.push('💨 رياح قوية نسبياً؛ تابع تحديثات الأرصاد.');if(!risks.length)risks.push('✓ لا تظهر المؤشرات المختصرة عتبات مرتفعة حالياً؛ هذا ليس تأكيداً لغياب المخاطر.');$('risks').innerHTML=risks.map(x=>`<div class="risk">${x}</div>`).join('');$('updated').textContent='آخر جلب: '+new Date().toLocaleTimeString('ar')+' • Open-Meteo';}catch(e){if(requestId!==selectionId)return;$('condition').textContent='تعذر جلب بيانات الطقس. تحقق من الإنترنت.';$('forecast').textContent='لا تتوفر التوقعات حالياً.'}}
+async function reverseCity(lat,lon,fallback){
+  try{
+    const url=`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&localityLanguage=ar`;
+    const response=await fetch(url);
+    if(!response.ok)throw Error('Geocoding failed');
+    const d=await response.json();
+    const city=d.city||d.locality||d.town||d.village||d.localityInfo?.administrative?.[0]?.name||d.principalSubdivision;
+    const country=d.countryName;
+    if(city&&country)return `${city}، ${country}`;
+    if(country)return `${d.principalSubdivision||'منطقة غير محددة'}، ${country}`;
+    return fallback||`${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+  }catch(e){
+    return fallback||`${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+  }
+}
+
+async function selectPlace(lat,lon,name){
+  const requestId=++selectionId;
+  $('place').textContent='جاري تحديد المدينة والدولة...';
+  $('condition').textContent='جاري جلب الطقس للمنطقة المختارة...';
+
+  const resolvedName=await reverseCity(lat,lon,name);
+  if(requestId!==selectionId)return;
+
+  selected={lat,lon,name:resolvedName};
+  $('place').textContent=resolvedName;
+  pointMarker();
+  await loadWeather(requestId);
+}
+async function searchCity(){const q=$('cityQuery').value.trim();if(!q)return;$('searchBtn').textContent='...';try{const r=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(q)+'&count=8&language=ar&format=json');const d=await r.json();if(!d.results?.length)throw Error();const p=d.results[0];await selectPlace(p.latitude,p.longitude,[p.name,p.admin1,p.country].filter(Boolean).join('، '));}catch(e){$('condition').textContent='لم يتم العثور على المدينة أو تعذر البحث.'}finally{$('searchBtn').textContent='بحث'}}$('searchBtn').onclick=searchCity;$('cityQuery').addEventListener('keydown',e=>{if(e.key==='Enter')searchCity()});
+$('locBtn').onclick=()=>{
+  if(!navigator.geolocation){
+    $('condition').textContent='تحديد الموقع غير مدعوم';
+    return;
+  }
+  $('condition').textContent='جاري تحديد موقعك...';
+  navigator.geolocation.getCurrentPosition(
+    p=>selectPlace(p.coords.latitude,p.coords.longitude,'موقعي الحالي'),
+    ()=>{$('condition').textContent='تعذر تحديد الموقع؛ ابحث عن مدينة.'},
+    {enableHighAccuracy:false,timeout:12000,maximumAge:300000}
+  );
+};
+
+function addBubble(message,type){
+  const el=document.createElement('div');
+  el.className='bubble '+type;
+  el.textContent=message;
+  $('chatLog').appendChild(el);
+  $('chatLog').scrollTop=$('chatLog').scrollHeight;
+}
+
+async function sendMessage(value){
+  const message=String(value||'').trim();
+  if(!message)return;
+
+  $('chatInput').value='';
+  addBubble(message,'user');
+  chatHistory.push({role:'user',content:message});
+  $('sendBtn').disabled=true;
+  $('chatStatus').textContent='جاري التفكير...';
+
+  try{
+    const response=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        messages:chatHistory.slice(-12),
+        place:selected.name
+      })
+    });
+
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.error||'تعذر الاتصال بالمساعد');
+
+    addBubble(data.reply,'bot');
+    chatHistory.push({role:'assistant',content:data.reply});
+    $('chatStatus').textContent='تم الرد بنجاح.';
+  }catch(error){
+    addBubble(error.message,'bot');
+    $('chatStatus').textContent='تحقق من إعدادات المساعد والاتصال.';
+  }finally{
+    $('sendBtn').disabled=false;
+  }
+}
+
+$('sendBtn').onclick=()=>sendMessage($('chatInput').value);
+
+$('chatInput').addEventListener('keydown',event=>{
+  if(event.key==='Enter')sendMessage($('chatInput').value);
+});
+
+document.querySelectorAll('[data-q]').forEach(button=>{
+  button.addEventListener('click',()=>{
+    sendMessage(button.dataset.q);
+  });
+});
+
+loadWeather();
+</script>
+</body>
+</html>

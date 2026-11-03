@@ -1,0 +1,12 @@
+node_modules/
+android/
+.env
+.DS_Store
+
+.env
+.env.*
+!.env.example
+node_modules/
+.git/
+*.log
+.DS_Store
